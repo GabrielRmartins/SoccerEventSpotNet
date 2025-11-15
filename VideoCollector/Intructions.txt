@@ -1,0 +1,38 @@
+This document describes how to use the highlight video collector. To download match videos from YouTube, you must provide a .csv file containing a list of matches to download, with two main columns: matchId and videoLink.
+
+matchId refers to the unique match identifier.
+
+videoLink refers to the full YouTube URL of the match video.
+
+An experimental matches_info.csv file is included so you can reproduce the same development environment used in the SoccerEventSpotNet project.
+
+To download the videos listed in the .csv file, it is recommended to create a virtual environment with all required libraries. An environment.yml file is provided for this purpose.
+
+Usage pipeline:
+
+Step 1 - Create conda environment:
+
+"conda env create -f environment.yml"
+
+Note: You must have conda already installed. Installation guide: https://docs.conda.io/projects/conda/en/stable/user-guide/install/index.html
+
+Step 2 - Activate conda environment created on step 1 with:
+
+"conda activate <env-name>"
+
+Note: If you use project's "environment.yml", the environment name is "VideoCollectorEnv".
+
+Step 3 - Run the video collector script
+
+"python3 video_downloader.py <output_path> <matches_info_path> <download_options_path>"
+
+Where:
+
+output_path: folder or path where videos will be saved
+(default: match_videos)
+
+matches_info_path: path to the .csv file containing the match list
+(default: matches_info.csv)
+
+download_options_path: path to a .json file with yt_dlp download options
+(default: download_options.json) — this file defines the desired output format for the downloaded videos.

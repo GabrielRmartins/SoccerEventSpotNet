@@ -1,0 +1,18 @@
+{
+    "format": "bestvideo[ext=mp4][vcodec!=av01]+bestaudio[ext=m4a]/bestvideo[ext=mp4]+bestaudio[ext=m4a]/best",
+    "merge_output_format": "mp4",
+    "postprocessors": [
+        {
+            "key": "FFmpegVideoConvertor",
+            "preferedformat": "mp4"
+        }
+    ],
+    "ignoreerrors": true,
+    "no_warnings": false,
+    "extract_flat": false,
+    "writesubtitles": false,
+    "writethumbnail": false,
+    "writeautomaticsub": false,
+    "keepvideo": false,
+    "clean_infojson": true
+}
