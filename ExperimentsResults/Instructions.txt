@@ -1,0 +1,1 @@
+This folder maintain all experiments checkpoints created during SoccerEventSpotNet project and other results files. For more experiments details look at project README. 
