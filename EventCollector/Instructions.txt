@@ -1,0 +1,25 @@
+This document describes how to use the event collector. This module downloads a subset of paper "A public data set of spatio-temporal match events in soccer competitions"(reference: https://www.nature.com/articles/s41597-019-0247-7) available data on figshare.
+
+Usage pipeline:
+
+Step 1 - Create conda environment:
+
+"conda env create -f environment.yml"
+
+Note: You must have conda already installed. Installation guide: https://docs.conda.io/projects/conda/en/stable/user-guide/install/index.html
+
+Step 2 - Activate conda environment created on step 1 with:
+
+"conda activate <env-name>"
+
+Note: If you use project's "environment.yml", the environment name is "EventCollectorEnv".
+
+Step 2 - Run event downloader python script
+
+"python3 event_downloader.py <output_path>"
+
+Where:
+
+- output_path is the output data folder (default is data)
+
+
