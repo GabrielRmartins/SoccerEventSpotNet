@@ -1,0 +1,11 @@
+name: ExperimentsResultsEnv
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.12.5
+  - pandas
+  - ffmpeg
+  - pip
+  - pip:
+      - torch==2.8.0
