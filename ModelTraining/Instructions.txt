@@ -1,0 +1,26 @@
+This module provide python scripts needed to perform a fine-tune on X3D-S arquitecture pre-treined on 
+Kinetics 400 considering all environment constructed by previous project modules.
+
+Usage:
+
+    - Install conda virtual environment:
+
+        conda env create -f environment.yml
+
+    - Activate created environment
+
+        conda activate ModelTrainingEnv
+
+    - Run training script:
+
+        python train_model.py <data_path> <labels_path> <output_path>
+
+        where:
+        - data_path is the path to h5 file with processed tensors.
+        - labels_path is the path to processed labels folder.
+        - output_path is the desired output folder to save training checkpoints. 
+
+    Note: This training module implements a fine-tune on X3D-S arquitecture pre-treined on Kinetics 400, 
+    in order to train all model you should change model import param "pre-treined" to False. Changing 
+    model arquitecture may change model input shape, so be aware about models hyperparams before trying it.
+
