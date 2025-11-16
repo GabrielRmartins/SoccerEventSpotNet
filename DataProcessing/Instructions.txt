@@ -1,0 +1,65 @@
+This module provides all necessary script to process each data. 
+The usual pipeline should be running python scripts on this order:
+process_events -> generate_timestamps -> generate_tensors -> generate_labels
+
+Usage details:
+
+ - In order to prepare the working environment properly it's recommended
+ to use conda environment specified by "environment.yml" file. 
+    - "conda env create -f environment.yml"
+    - "conda activate DataProcessingEnv"
+
+Note: If you use other environment pay attention on opencv library download,
+specially on linux system, you should install it with ffmpeg library support
+and av1 codec to avoid video reading errors. In order to do so use:
+"conda install -c conda-forge "opencv>=4.10" "ffmpeg>=6.1""
+
+- Running process_events:
+
+    python process_events.py <events_data_path> <video_info_path> 
+
+    where:
+     - events_data_path is the path to event data folder downloaded by 
+     EventCollector module
+     - video_info_path is the path for matches_info file provided on 
+     Common module.
+
+    Note: you can ignore passing these parameters if you use project 
+    default strucure on previous modules.
+
+- Running generate_events_timestamps:
+    
+        python generate_events_timestamps.py <output_path> <events_data_path> <video_info_path>
+
+        where:
+        - output_path is the path of output folder desired for generated timestamps.
+        - events_data_path is the path to processed events data file (.csv).
+        - video_info_path is the path for matches_info file provided on 
+        Common module.
+
+    Note: You can ignore the parameters if you used default paths on previous modules.
+    If you want to generate different timestamps for each event (to test, for exemple, 
+    if any heuristic can make event representation more accurate), you can should modify
+    this module, creating functions to define start and end timestamps for each event.
+
+- Running generate_tensors:
+
+    python generate_tensors.py <output_file> <video_data_path> <timestamps_path>
+
+    where:
+    - output_file is the full path(if you want to save it in a different folder) or
+    file name for tensors h5 file which will save processed tensor data.
+    - video_data_path is the path of the folder with matches videos(.mp4)
+    - timestamps_path is the path to timestamps file which will be used to
+    video segmentation.
+
+    Note: You can ignore the parameters if you used default paths on previous modules.
+
+- Running generate_labels:
+
+    python generate_labels.py <events_data_path> <output_path>
+
+    where:
+    - events_data_path is the path to processed event data (.csv).
+    - output_path is the path to the output folder where labels 
+    should be saved.

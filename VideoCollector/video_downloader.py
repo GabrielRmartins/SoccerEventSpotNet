@@ -30,13 +30,16 @@ def download_video(url,match_id, output_path='match_videos', options_path = 'dow
 
 
 
-def download_all_videos(input_path='matches_info.csv', output_path='match_videos', options_path = 'download_options.json'):
+def download_all_videos(output_path='match_videos', options_path = 'download_options.json'):
     """
     Downloads all videos from a csv file containing video links and matches ids.
 
     The csv file should have at least two columns: 'Game_Id' and 'Link', where 'matchId' is the unique identifier for each game and 'videoLink' is the URL to the video.
 
     """
+    project_root_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    input_path = os.path.join(project_root_path,'Common','matches_info.csv')
+
     if len(sys.argv)>1:
         output_path = sys.argv[1]
 
