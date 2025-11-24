@@ -2,24 +2,16 @@ This document describes how to use the event collector. This module downloads a 
 
 Usage pipeline:
 
-Step 1 - Create conda environment:
-
-"conda env create -f environment.yml"
-
-Note: You must have conda already installed. Installation guide: https://docs.conda.io/projects/conda/en/stable/user-guide/install/index.html
-
-Step 2 - Activate conda environment created on step 1 with:
-
-"conda activate <env-name>"
-
-Note: If you use project's "environment.yml", the environment name is "EventCollectorEnv".
-
-Step 2 - Run event downloader python script
-
-"python3 event_downloader.py <output_path>"
+python event_downloader.py --output_path <output_path> --url_events <url_events> --url_matches <url_matches> --url_teams <url_teams> 
 
 Where:
 
-- output_path is the output data folder (default is data)
+--output_path: is an optional parameter that defines the desidered data output path (default is "SoccerEventSpotNet/Common").
+
+--url_events: in an optional parameter that defines the url to download events data from (default is "https://figshare.com/ndownloader/files/14464685").
+
+--url_matches: in an optional parameter that defines the url to download matches data from (default is "https://figshare.com/ndownloader/files/14464622").
+
+--url_teams: in an optional parameter that defines the url to download teams data from (default is "https://figshare.com/ndownloader/files/15073697").
 
 

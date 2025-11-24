@@ -1,10 +1,10 @@
-import pandas as pd
 import urllib.request
 import os
 import zipfile
 import sys
+import argparse
 
-def download_matches(output_path='data/matches', url="https://figshare.com/ndownloader/files/14464622"):
+def download_matches(output_path, url):
 
     matches_path_files = os.listdir(output_path)
 
@@ -13,7 +13,7 @@ def download_matches(output_path='data/matches', url="https://figshare.com/ndown
     else:
         
         matches_file_path = os.path.join(output_path, "tmp_matches")
-        matches_url = "https://figshare.com/ndownloader/files/14464622"
+        matches_url = url
         
         try:
             urllib.request.urlretrieve(matches_url, matches_file_path)
@@ -31,7 +31,7 @@ def download_matches(output_path='data/matches', url="https://figshare.com/ndown
             print("Matches files sucessfully downloaded!")
 
         
-def download_teams(output_path='data/teams', url="https://figshare.com/ndownloader/files/15073697"):
+def download_teams(output_path, url):
  
     teams_path_files = os.listdir(output_path)
 
@@ -40,7 +40,7 @@ def download_teams(output_path='data/teams', url="https://figshare.com/ndownload
     else:
                 
         teams_file_path = os.path.join(output_path, "teams.json")
-        teams_url = "https://figshare.com/ndownloader/files/15073697"
+        teams_url = url
         
         try:
             urllib.request.urlretrieve(teams_url, teams_file_path)
@@ -58,7 +58,7 @@ def download_teams(output_path='data/teams', url="https://figshare.com/ndownload
         print("Teams files sucessfully downloaded!")
 
 
-def download_events(output_path='data/events', url="https://figshare.com/ndownloader/files/14464685"):
+def download_events(output_path, url):
     
     events_path_files = os.listdir(output_path)
 
@@ -67,7 +67,7 @@ def download_events(output_path='data/events', url="https://figshare.com/ndownlo
     else:
         
         events_file_path = os.path.join(output_path, "tmp_events")
-        events_url = "https://figshare.com/ndownloader/files/14464685"
+        events_url = url
         
         try:
             urllib.request.urlretrieve(events_url, events_file_path)
@@ -85,30 +85,28 @@ def download_events(output_path='data/events', url="https://figshare.com/ndownlo
             print("Events files sucessfully downloaded!")
     
 
-def download_data(output_path='data'):
+def download_data():
+    project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    parser = argparse.ArgumentParser(description='Download soccer event, match, and team data.')
+    parser.add_argument('--output_path', type=str, default=os.path.join(project_root,"Common","WyscoutTop5"), help='Directory path to save the downloaded data.') 
+    parser.add_argument('--url_events', type=str, default="https://figshare.com/ndownloader/files/14464685", help='URL to download events from (if different from Wyscout Top 5 Figshare Dataset).')
+    parser.add_argument('--url_matches', type=str, default="https://figshare.com/ndownloader/files/14464622", help='URL to download matches from (if different from Wyscout Top 5 Figshare Dataset).')
+    parser.add_argument('--url_teams', type=str, default="https://figshare.com/ndownloader/files/15073697", help='URL to download teams from (if different from Wyscout Top 5 Figshare Dataset).')
+    args = parser.parse_args()
     
-    os.makedirs(output_path,exist_ok = True)
+    os.makedirs(args.output_path,exist_ok = True)
 
     new_data_folders = ["matches", "teams", "events"]
     for folder in new_data_folders:
-        os.makedirs(os.path.join(output_path,folder), exist_ok = True)
+        os.makedirs(os.path.join(args.output_path,folder), exist_ok = True)
 
-    download_matches(output_path=os.path.join(output_path,"matches"))
-    download_teams(output_path=os.path.join(output_path,"teams"))
-    download_events(output_path=os.path.join(output_path,"events"))
+    download_matches(output_path=os.path.join(args.output_path,"matches"),url=args.url_matches)
+    download_teams(output_path=os.path.join(args.output_path,"teams"),url=args.url_teams)
+    download_events(output_path=os.path.join(args.output_path,"events"),url=args.url_events)
     
     
-
-
-
-
-
 
 
 if __name__ == "__main__":
 
-    if len(sys.argv)>1:
-        output_path = sys.argv[1]
-        download_data(output_path=output_path)
-    else:
-        download_data()
+    download_data()
