@@ -1,6 +1,6 @@
 This module provides all necessary script to process each data. 
 The usual pipeline should be running python scripts on this order:
-process_events -> generate_timestamps -> generate_tensors -> generate_labels
+process_events -> split_matches -> generate_tensors -> generate_labels
 
 Usage details:
 
@@ -16,50 +16,67 @@ and av1 codec to avoid video reading errors. In order to do so use:
 
 - Running process_events:
 
-    python process_events.py <events_data_path> <video_info_path> 
+    python process_events.py --events_data_path <events_data_path> --video_info_path <video_info_path> --output_path <output_path>  
 
     where:
-     - events_data_path is the path to event data folder downloaded by 
-     EventCollector module
-     - video_info_path is the path for matches_info file provided on 
-     Common module.
+     - events_data_path is the path to event data folder downloaded by EventCollector module
+     (Default is "SoccerEventSpotNet/Common/WyscoutTop5/events")
+     - video_info_path is the path for matches_info file provided on Common module.
+     (Default in "SoccerEventSpotNet/Common/MatchesInfo.csv")
+     - output_path is the desired path where processed events DataFrame should be saved.
+     (Default is "SoccerEventSpotNet/Common/PrecessedEvents.csv")
 
     Note: you can ignore passing these parameters if you use project 
     default strucure on previous modules.
 
-- Running generate_events_timestamps:
+- Running split_matches:
     
-        python generate_events_timestamps.py <output_path> <events_data_path> <video_info_path>
+        python split_matches.py --output_path <output_path> --events_data_path <events_data_path> 
 
         where:
-        - output_path is the path of output folder desired for generated timestamps.
+        - output_path is the path of output folder desired for generated matches split into train(60%), test(%20) and validation(20%).
+        (Default is "SoccerEventSpotNet/DataProcessing/MatchesSplit.json"        
         - events_data_path is the path to processed events data file (.csv).
-        - video_info_path is the path for matches_info file provided on 
-        Common module.
+        (Default is "SoccerEventSpotNet/Common/ProcessedEvents.csv")
+        
 
     Note: You can ignore the parameters if you used default paths on previous modules.
-    If you want to generate different timestamps for each event (to test, for exemple, 
-    if any heuristic can make event representation more accurate), you can should modify
-    this module, creating functions to define start and end timestamps for each event.
 
 - Running generate_tensors:
 
-    python generate_tensors.py <output_file> <video_data_path> <timestamps_path>
+    python generate_tensors.py --output_path <output_path> --video_data_path <video_data_path> --events_data_path <events_data_path> --video_info_path <video_info_path> --seg_strategy <seg_strategy>
 
     where:
-    - output_file is the full path(if you want to save it in a different folder) or
-    file name for tensors h5 file which will save processed tensor data.
+    - output_path is the path to the folder where generated tensors should be saved.
+    (Default is "SoccerEventSpotNet/Common/Tensors")
     - video_data_path is the path of the folder with matches videos(.mp4)
-    - timestamps_path is the path to timestamps file which will be used to
-    video segmentation.
+    (Default is "SoccerEventSpotNet/Common/Videos")
+    - events_data_path is the path to processed event data DataFrame.
+    (Default is "SoccerEventSpotNet/Common/ProcessedEvents.csv")
+    - video_info_path is the path to file with collected matches info.
+    (Default is "SoccerEventSpotNet/Common/MatchesInfo.csv")
+    - seg_strategy is the identifier for segmentation strategy that should be using during tensors generation.
+    ( Default is '1', possible entries: 1,2)
 
-    Note: You can ignore the parameters if you used default paths on previous modules.
+    Notes: 
+    (1) - You can ignore the parameters if you used default paths on previous modules.
+    (2) - The .h5 file name generated will be "tensors_strategy_<seg_strategy>.5"
+    (3) - If yout want to implement a new segmentation strategy you should create a new function on ¨DataProcessing/utils.py" that generates timestamps for each event and add a path ot it on "DataProcessing/generate_tensor.py", for example, you can implement a new strategy 3 and call it with --seg_strategy '3' if you generate these functions and add an additional "elif" statement to the new function.
 
 - Running generate_labels:
 
-    python generate_labels.py <events_data_path> <output_path>
+    python generate_labels.py --events_data_path <events_data_path> --output_path <output_path> --exp_id <exp_id> --matches_split_path <matches_split_path>
 
     where:
     - events_data_path is the path to processed event data (.csv).
-    - output_path is the path to the output folder where labels 
-    should be saved.
+    (Default is "SoccerEventSpotNet/Common/ProcessedEvents.csv")
+    - output_path is the path to the output folder where labels should be saved.
+    (Default is "SoccerEventSpotNet/Common/Labels/")
+    - exp_id is the experiment identifier from where labels should be created.
+    (Default is "1", possible entries: 1-12)
+    - mathes_plit_path is the path to file with spliting json dictionary.
+    (Default is "SoccerEventSpotNet/DataProcessing/MatchesSplit.json")
+    
+    Notes:
+    (1) - The labels will be generated on outpuh_path folder inside a new folder of name "Exp_{exp_id}".
+    (2) - If you want to create new labels you should modify "DataProcessing/generate_labels.py" to generate these labels. One way to do it is to implement a new generation function and an "elif" new statement on "main" function that call it with a specific identifier.

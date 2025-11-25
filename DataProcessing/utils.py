@@ -3,6 +3,12 @@ import cv2
 import numpy as np
 import h5py
 
+def define_events_endtimes(df_events):
+    df_events = df_events.sort_values(by=['matchId','matchPeriod','eventSec'],ascending=True).reset_index(drop=True).copy()
+    df_events['eventSecEnd'] = df_events['eventSec'].shift(-1)
+    df_events.loc[df_events['eventSecEnd'] < df_events['eventSec'], 'eventSecEnd'] = df_events.loc[df_events['eventSecEnd'] < df_events['eventSec'], 'eventSec'] + 1.5
+    return df_events
+
 def collect_match_timestamps(match_id,events_data_path, video_data_path):
 
     # Collect all event timestamps for a given matchId
@@ -58,6 +64,32 @@ def collect_all_timestamps(df_events, video_info_path):
                 continue
             timestamps.append((match_id,event_id,period,start_timestamp,end_timestamp))
     return timestamps
+
+def collect_strategy_1_timestamps(events_data_path, video_info_path):
+
+    df_events = pd.read_csv(events_data_path)
+    df_events = define_events_endtimes(df_events)
+    return collect_all_timestamps(df_events, video_info_path)
+
+def treat_outliers(df_events):
+    df_events["subEventName"] = df_events["subEventName"].fillna('Offside')
+    for event_type in np.unique(df_events['subEventName'].values):
+        event_mask = df_events['subEventName'] == event_type
+        event_durations = df_events.loc[event_mask, 'eventSecEnd'] - df_events.loc[event_mask, 'eventSec']
+        q1 = event_durations.quantile(0.25)
+        q3 = event_durations.quantile(0.75)
+        iqr = q3 - q1
+        lower_bound = q1 - 1.5 * iqr
+        upper_bound = q3 + 1.5 * iqr
+        outlier_mask = (event_durations < lower_bound) | (event_durations > upper_bound)
+        df_events.loc[event_mask & outlier_mask, 'eventSecEnd'] = df_events.loc[event_mask & outlier_mask, 'eventSec'] + 1.5
+    return df_events
+
+def collect_strategy_2_timestamps(events_data_path, video_info_path):
+    df_events = pd.read_csv(events_data_path)
+    df_events = define_events_endtimes(df_events)
+    df_events = treat_outliers(df_events)
+    return collect_all_timestamps(df_events, video_info_path)  
 
 
 def extract_segment_frames(video_path, start_time, end_time, num_frames=13, size=(252, 252)):

@@ -2,14 +2,17 @@ import pandas as pd
 import numpy as np
 import os
 import sys
+import argparse
 
 # Filter and process event data based on available match videos on match_info.csv
 
-def process_event_data(events_data_path, video_info_path):
+def process_event_data(events_data_path, video_info_path, output_path):
     # Load events and video info data
     df_video_info = pd.read_csv(video_info_path)
 
     collected_matches_ids = np.unique(df_video_info["matchId"].values)
+
+    print("Number of collected matches with videos found:", len(collected_matches_ids))
 
     events_dfs = []
 
@@ -21,32 +24,22 @@ def process_event_data(events_data_path, video_info_path):
 
     target_events_df = pd.concat(events_dfs)
 
+    print("Number of events after filtering for collected matches:", len(target_events_df))    
 
-    project_root_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
-    output_events_path = os.path.join(project_root_path,"Common","processed_events.csv")
-
-    target_events_df.to_csv(output_events_path, index=False)
-    print(f"Processed events data saved to {output_events_path}")
+    target_events_df.to_csv(output_path, index=False)
+    print(f"Processed events data saved to {output_path}")
     
     
 
 if __name__ == "__main__":
 
-    if len(sys.argv) >=3:
-        events_data_path = sys.argv[1]
-        video_info_path = sys.argv[2]     
-        process_event_data(events_data_path, video_info_path)
+    project_root_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-    elif len(sys.argv) >= 2:
-        events_data_path = sys.argv[1]
-        project_root_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        video_info_path = os.path.join(project_root_path,"Common","matches_info.csv")
-        process_event_data(events_data_path,video_info_path)
+    parser = argparse.ArgumentParser(description="Process event data based on collected events and videos.")
+    parser.add_argument('--events_data_path', type=str, default = os.path.join(project_root_path,"Common","WyscoutTop5","events"), help='Path to the directory containing event data files.')
+    parser.add_argument('--video_info_path', type=str, default = os.path.join(project_root_path,"Common","MatchesInfo.csv"), help='Path to the matches_info.csv file containing video information.')
+    parser.add_argument('--output_path', type=str, default = os.path.join(project_root_path,"Common","ProcessedEvents.csv") , help='Path to save the processed events data.')
 
-    else:
-        project_root_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        events_data_path = os.path.join(project_root_path,"EventCollector","data","events")
-        video_info_path = os.path.join(project_root_path,"Common","matches_info.csv")
-        process_event_data(events_data_path, video_info_path)
-        
+    args = parser.parse_args()
+
+    process_event_data(args.events_data_path, args.video_info_path, args.output_path)
