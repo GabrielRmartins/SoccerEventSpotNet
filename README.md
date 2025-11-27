@@ -26,7 +26,7 @@ This repository contains official implementations developed for the Oriented Com
 
 **Motivation.** As the popularity of data based analysis in sports rises among teams and enthusiasts, the need of high-quality data to support becomes an important task. The impact os this necessity has created a new soccer data industry environment where companies provide these resources/data as their main product. One of the used type of data in this context is **event data**, that says:for each event occurence during a soccer match, what are its atributes such as player who performed it and its  type. Considering the high demand and limited sources of this kind of data, why not obtain it automatically from matches videos? This project aims to automatically detect a portion of this data, generating an automated tool for event type detection from videos.
 
-**Objective.** The main porpouse of this project is to use event data information, specially event types and timestamps, to automatically generate video-label pairs that could be used to train an video classifier model, in this case, perform a fine-tuning on X3D-S pre-trained on Kinetics-400.
+**Objective.** The main porpouse of this project is to use event data information, especially event types and timestamps, to automatically generate video-label pairs that could be used to train an video classifier model, in this case, perform a fine-tuning on X3D-S pre-trained on Kinetics-400.
 
 **Collected Data.** Wyscout top 5 public events dataset is the main source of tabular data needed during this project. It provides events information from European Top 5 five leagues 2017-2018 season matches and also 2016 Uefa EuroCup and 2018 Fifa WorldCup. This dataset was proposed at [A public data set of spatio-temporal match events in soccer competitions](https://www.nature.com/articles/s41597-019-0247-7).
 
@@ -161,7 +161,7 @@ Notes:
 
 
 ### Training
-In order to train new models, you need a h5py file with preprocessed tensors and new labelsm an example of this process is available at ExamplesNotebooks module on training_example script. Considering you have these resources, you can run it with:
+In order to train new models, you need a h5py file with preprocessed tensors and new labels an example of this process is available at ExamplesNotebooks module on training_example script. Considering you have these resources, you can run it with:
 ```bash
 cd ModelTraining
 
@@ -199,7 +199,7 @@ where:
 
 ## Contribute
 
-You are free to contribute in any aspect of this project. Some of interesting directions should be collecting new video-label pair, scecially for less representative classes. Using new segmentation strategies could also help by testing how different strategies can create better quality video tensors. Adapting the pipeline to othes visual architetures could also be an amazing way to contribute on this project, evalutaing the impact of other classifiers on event detection performance.
+You are free to contribute in any aspect of this project. Some of interesting directions should be collecting new video-label pair, especially for less representative classes. Using new segmentation strategies could also help by testing how different strategies can create better quality video tensors. Adapting the pipeline to others visual architetures could also be an amazing way to contribute on this project, evaluating the impact of other classifiers on event detection performance.
 
 ## License
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
