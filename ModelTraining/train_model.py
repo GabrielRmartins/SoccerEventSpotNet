@@ -1,18 +1,18 @@
 from utils import *
 import os
 import sys
+import argparse
 
-def main(dataset_path,labels_path,output_path):
+def main(dataset_path,labels_path,output_path,batch_size):
     # === Paths ===
     h5_path = dataset_path
 
     labels_train = os.path.join(labels_path, "train_labels.json")
     labels_val = os.path.join(labels_path, "val_labels.json")
-    event_to_idx_path = os.path.join(labels_path, "event_to_idx.json")
+    idx_to_event_path = os.path.join(labels_path, "idx_to_event.json")
 
     # === Hypermparams ===
     num_epochs = 20
-    batch_size = 8
     lr = 1e-4 # learning rate
     patience = 2  # early stopping
 
@@ -24,8 +24,8 @@ def main(dataset_path,labels_path,output_path):
         labels_train = json.load(f)
     with open(labels_val, "r") as f:
         labels_val = json.load(f)
-    with open(event_to_idx_path, "r") as f:
-        event_to_idx = json.load(f)
+    with open(idx_to_event_path, "r") as f:
+        idx_to_event = json.load(f)
 
     num_classes = len(set(labels_train.values()))
 
@@ -62,7 +62,7 @@ def main(dataset_path,labels_path,output_path):
         print(f"🎯 Validation mean accuracy: {mean_acc:.4f}")
         print(f"General Precision: {precision:.4f}")
         for i, acc in enumerate(acc_per_class):
-            print(f"  Class {event_to_idx[i]}: {acc:.4f}")
+            print(f"  Class {idx_to_event[str(i)]}: {acc:.4f}")
 
         # === Salvar checkpoint ===
         checkpoint_path = os.path.join(output_path, f"checkpoint_epoch{epoch+1}.pth")
@@ -97,15 +97,16 @@ def main(dataset_path,labels_path,output_path):
 
     
 if __name__ == "__main__":
-    project_root_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    dataset_path = os.path.join(project_root_path, "DataProcessing", "processed_tensors", "tensors.h5")
-    labels_path = os.path.join(project_root_path, "DataProcessing", "labels")
-    output_path = os.path.join(project_root_path, "ModelTraining", "checkpoints","exp?")
-    if len(sys.argv) > 1:
-        dataset_path = sys.argv[1]
-    if len(sys.argv) > 2:
-        labels_path = sys.argv[2]
-    if len(sys.argv) > 3:
-        output_path = sys.argv[3]   
-    os.makedirs(output_path, exist_ok=True)
-    main(dataset_path,labels_path,output_path)
+
+    project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+    parser = argparse.ArgumentParser(description="Evaluate model on HDF5 video dataset")
+    parser.add_argument("--h5_path", type=str,default=os.path.join(project_root,"Common","Tensors","tensors_strategy_1.h5"), help="Path to the HDF5 file containing video tensors")
+    parser.add_argument("--labels_path", type=str,default=os.path.join(project_root,"Common","Labels","Exp_1"), help="Path to the folder containing all experiment labels")
+    parser.add_argument("--batch_size", type=int, default=8, help="Size of each evaluation batch")
+    parser.add_argument("--output_path", type=str, default=os.path.join(project_root,"ModelTraining","Checkpoints"), help="Path to save training checkpoints")
+    args = parser.parse_args()
+
+       
+    os.makedirs(args.output_path, exist_ok=True)
+    main(args.h5_path,args.labels_path,args.output_path,args.batch_size)

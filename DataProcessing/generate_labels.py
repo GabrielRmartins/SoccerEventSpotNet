@@ -27,7 +27,6 @@ def generate_labels(events_data_path, output_path, matches_split_path, exp_id):
         event_type_column = 'subEventName'
     
     if exp_id in ['1', '2', '3', '4']:
-        df_events["subEventName"] = df_events["subEventName"].fillna('Offside')
         event_types = np.unique(df_events[event_type_column].values)
         event_to_idx = {event: idx for idx, event in enumerate(event_types)}
         with open(os.path.join(output_path, 'event_to_idx.json'), 'w') as f:
@@ -178,12 +177,25 @@ def generate_waterfall_labels(events_data_path, output_path, matches_split_path)
 
     with open(matches_split_path, 'r') as f:
         split_info = json.load(f)  
+
     train_matches = split_info['train_matches']
     val_matches = split_info['val_matches']
     test_matches = split_info['test_matches']   
 
+    test_labels = {}
+
     df_events = pd.read_csv(events_data_path)
     event_types = np.unique(df_events['eventName'].values)
+    subevent_types = np.unique(df_events['subEventName'].values)
+    subevent_to_idx = {event: idx for idx, event in enumerate(subevent_types)}
+    idx_to_subevent = {idx: event for event, idx in subevent_to_idx.items()}
+
+    with open(os.path.join(output_path, 'event_to_idx.json'), 'w') as f:
+        json.dump(subevent_to_idx, f,indent=4)
+
+    with open(os.path.join(output_path, 'idx_to_event.json'), 'w') as f:
+        json.dump(idx_to_subevent, f,indent=4)
+
     for event_type in event_types:
 
         print(f"Generating labels for event type: {event_type}...")
@@ -192,7 +204,7 @@ def generate_waterfall_labels(events_data_path, output_path, matches_split_path)
 
         train_labels = {}
         val_labels = {}
-        test_labels = {}
+        
 
         event_df = df_events[df_events['eventName'] == event_type]
         new_event_to_idx = {event: idx for idx, event in enumerate(np.unique(event_df['subEventName']))}
@@ -219,9 +231,10 @@ def generate_waterfall_labels(events_data_path, output_path, matches_split_path)
         with open(os.path.join(event_path, 'val_labels.json'), 'w') as f:
             json.dump(val_labels, f,indent=4) 
         print(f"Number of validation labels generated for event {event_type}: {len(val_labels)}")
-        with open(os.path.join(event_path, 'test_labels.json'), 'w') as f:
+        
+    with open(os.path.join(output_path, 'test_labels.json'), 'w') as f:
             json.dump(test_labels, f,indent=4) 
-        print(f"Number of test labels generated for event {event_type}: {len(test_labels)}")
+            print(f"Number of test labels generated : {len(test_labels)}")
 
 
         

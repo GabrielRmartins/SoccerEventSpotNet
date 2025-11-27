@@ -25,7 +25,7 @@ def process_event_data(events_data_path, video_info_path, output_path):
     target_events_df = pd.concat(events_dfs)
 
     print("Number of events after filtering for collected matches:", len(target_events_df))    
-
+    target_events_df['subEventName'] = target_events_df['subEventName'].replace('','Offside')
     target_events_df.to_csv(output_path, index=False)
     print(f"Processed events data saved to {output_path}")
     

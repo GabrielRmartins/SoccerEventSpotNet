@@ -78,3 +78,48 @@ def eval(model, loader, device, num_classes):
     mean_acc = np.mean(acc_per_class)
     return mean_acc, acc_per_class,precision
 
+def predict_waterfall_model(models, loader, device):
+    labels_true = []
+    labels_pred = []
+    labels_root = []
+    with torch.no_grad():
+        for videos, labels in tqdm(loader, desc="Evaluating Waterfall Model", leave=False):
+            videos, labels = videos.to(device), labels.to(device)
+            outputs = models["root"](videos)
+            _, predicted = torch.max(outputs, 1)
+            for i in range(len(labels)):
+                labels_root.append(predicted[i].item())
+                labels_true.append(labels[i].item())
+                current_model = models.get(predicted[i].item(), None)
+                
+                if current_model is not None:
+                    
+                    video_i = videos[i].unsqueeze(0)
+                    output_i = current_model(video_i)
+                    
+                    labels_pred.append(output_i.cpu().numpy())
+                else:
+                    labels_pred.append(output_i.cpu().numpy())
+
+    return labels_true, labels_pred, labels_root
+
+
+
+
+def predict(model, loader, device):
+    model.eval()
+    expected_labels = []
+    predicted_labels = []
+
+    with torch.no_grad():
+        
+        for videos, labels in tqdm(loader, desc="Evaluating", leave=False):
+            videos, labels = videos.to(device), labels.to(device)
+            outputs = model(videos)          
+            expected_labels.extend(labels.cpu().numpy())
+            predicted_labels.extend(outputs.cpu().numpy())
+
+        expected_labels = np.array(expected_labels)
+        predicted_labels = np.array(predicted_labels)
+
+    return expected_labels,predicted_labels

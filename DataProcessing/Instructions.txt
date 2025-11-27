@@ -35,7 +35,7 @@ and av1 codec to avoid video reading errors. In order to do so use:
 
         where:
         - output_path is the path of output folder desired for generated matches split into train(60%), test(%20) and validation(20%).
-        (Default is "SoccerEventSpotNet/DataProcessing/MatchesSplit.json"        
+        (Default is "SoccerEventSpotNet/DataProcessing/MatchesSplit.json")       
         - events_data_path is the path to processed events data file (.csv).
         (Default is "SoccerEventSpotNet/Common/ProcessedEvents.csv")
         
