@@ -28,7 +28,7 @@ This repository contains official implementations developed for the Oriented Com
 
 **Objective.** The main porpouse of this project is to use event data information, specially event types and timestamps, to automatically generate video-label pairs that could be used to train an video classifier model, in this case, perform a fine-tuning on X3D-S pre-trained on Kinetics-400.
 
-**Collected Data.** Wyscout top 5 public events dataset is the main source of tabular data needed during this project. It provides events information from European Top 5 five leagues 2017-2018 season matches and also 2016 Uefa EuroCup and 2018 Fifa WorldCup. This dataset was proposed at [A public data set of spati--temporal match events in soccer competitions](https://www.nature.com/articles/s41597-019-0247-7).
+**Collected Data.** Wyscout top 5 public events dataset is the main source of tabular data needed during this project. It provides events information from European Top 5 five leagues 2017-2018 season matches and also 2016 Uefa EuroCup and 2018 Fifa WorldCup. This dataset was proposed at [A public data set of spatio-temporal match events in soccer competitions](https://www.nature.com/articles/s41597-019-0247-7).
 
 **Collected Video.** All video were collected from YouTube official teams and competitions channels, filtering matches with reference on Wyscout Top 5 dataset. At the end, 55 full matches videos were colected and its references are on Common module of this repository.
 

@@ -1,0 +1,12 @@
+{
+    "Duel": 0,
+    "Foul": 1,
+    "Free Kick": 2,
+    "Goalkeeper leaving line": 3,
+    "Interruption": 4,
+    "Offside": 5,
+    "Others on the ball": 6,
+    "Pass": 7,
+    "Save attempt": 8,
+    "Shot": 9
+}
