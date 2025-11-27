@@ -112,7 +112,7 @@ python process_events.py --events_data_path <events_data_path> --video_info_path
 Where:
 - events_data_path is the path to event data folder downloaded by EventCollector module (Default is "SoccerEventSpotNet/Common/WyscoutTop5/events")
 - video_info_path is the path for matches_info file provided on Common module.(Default in "SoccerEventSpotNet/Common/MatchesInfo.csv")
- - output_path is the desired path where processed events DataFrame should be saved.(Default is "SoccerEventSpotNet/Common/PrecessedEvents.csv")
+- output_path is the desired path where processed events DataFrame should be saved.(Default is "SoccerEventSpotNet/Common/PrecessedEvents.csv")
 
 **Note**: you can ignore passing these parameters if you use project default strucure on previous modules.
 
@@ -136,11 +136,11 @@ Where:
 - events_data_path is the path to processed event data (.csv).(Default is "SoccerEventSpotNet/Common/ProcessedEvents.csv")
 - output_path is the path to the output folder where labels should be saved.(Default is "SoccerEventSpotNet/Common/Labels/")
  - exp_id is the experiment identifier from where labels should be created.(Default is "1", possible entries: 1-12)
-- mathes_plit_path is the path to file with spliting json dictionary.(Default is "SoccerEventSpotNet/DataProcessing/MatchesSplit.json")
+- mathes_split_path is the path to file with spliting json dictionary.(Default is "SoccerEventSpotNet/DataProcessing/MatchesSplit.json")
     
 Notes:
 
--  The labels will be generated on outpuh_path folder inside a new folder of name "Exp_{exp_id}".
+-  The labels will be generated on output_path folder inside a new folder of name "Exp_{exp_id}".
 - If you want to create new labels you should modify "DataProcessing/generate_labels.py" to generate these labels. One way to do it is to implement a new generation function and an "elif" new statement on "main" function that call it with a specific identifier.
 
 **Generating tensors.**
